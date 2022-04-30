@@ -10,11 +10,6 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: '/manager',
-    name: 'Farm Manager',
-    component: Manager,
-  },
-  {
     path: '/farmer',
     name: 'Farmer',
     component: Farmer,
