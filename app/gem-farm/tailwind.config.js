@@ -16,11 +16,8 @@ module.exports = {
       },
       colors: {
         rb: {
-          yellow: 'rgb(242,196,10)',
-          green: 'rgb(0,255,0)',
-          blue: 'rgb(0,255,255)',
-          pink: 'rgb(255,0,255)',
-          dark: '#21252A',
+          mickeypink: '#FFECE8',
+          mickeyred: '#DA291C'
         },
         rarity: {
           legendary: '#fda219',
