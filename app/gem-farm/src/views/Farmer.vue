@@ -65,8 +65,8 @@
         Farmer account not found :( Create a new one?
       </div>
       <div class="w-full text-center">
-        <button class="nes-btn is-primary" @click="initFarmer">
-          New Farmer
+        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="initFarmer">
+          Create New Staking Account
         </button>
       </div>
     </div>
