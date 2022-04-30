@@ -102,7 +102,7 @@ export default defineComponent({
     });
 
     // --------------------------------------- farmer details
-    const farm = ref<string>();
+    const farm = ref<string>(process.env.GEM_FARM_PK || "");
     const farmAcc = ref<any>();
 
     const farmerIdentity = ref<string>();
