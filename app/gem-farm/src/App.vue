@@ -13,7 +13,6 @@
     </div>
 
     <div class="pt-10"></div>
-    <TheCat />
     <TheFooter />
   </div>
 </template>
@@ -21,9 +20,8 @@
 <script>
 import TheNavBar from '@/components/TheNavBar';
 import TheFooter from '@/components/gem-farm/TheFooter';
-import TheCat from '@/components/gem-farm/TheCat';
 export default {
-  components: { TheCat, TheFooter, TheNavBar },
+  components: { TheFooter, TheNavBar },
 };
 </script>
 
