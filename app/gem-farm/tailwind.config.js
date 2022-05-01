@@ -17,7 +17,7 @@ module.exports = {
       colors: {
         rb: {
           mickeypink: '#FFECE8',
-          mickeyred: '#DA291C'
+          mickeyred: '#DA0048'
         },
         rarity: {
           legendary: '#fda219',
