@@ -29,40 +29,40 @@
       >
         <button
           v-if="farmerState === 'staked' && selectedNFTs.length > 0"
-          class="nes-btn is-primary mr-5"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
           @click="addGems"
         >
           Add Gems (resets staking)
         </button>
         <button
           v-if="farmerState === 'unstaked'"
-          class="nes-btn is-success mr-5"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
           @click="beginStaking"
         >
           Begin staking
         </button>
         <button
           v-if="farmerState === 'staked'"
-          class="nes-btn is-error mr-5"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
           @click="endStaking"
         >
           End staking
         </button>
         <button
           v-if="farmerState === 'pendingCooldown'"
-          class="nes-btn is-error mr-5"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
           @click="endStaking"
         >
           End cooldown
         </button>
-        <button class="nes-btn is-warning" @click="claim">
+        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="claim">
           Claim {{ availableA }} A / {{ availableB }} B
         </button>
       </Vault>
     </div>
     <div v-else>
       <div class="w-full text-center mb-5">
-        Farmer account not found :( Create a new one?
+        No staking account found with this wallet! Make a new one?
       </div>
       <div class="w-full text-center">
         <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="initFarmer">
@@ -102,7 +102,7 @@ export default defineComponent({
     });
 
     // --------------------------------------- farmer details
-    const farm = ref<string>(process.env.GEM_FARM_PK || "");
+    const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
     const farmAcc = ref<any>();
 
     const farmerIdentity = ref<string>();
