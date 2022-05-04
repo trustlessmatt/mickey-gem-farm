@@ -9,13 +9,13 @@
     </div>
     <div class="mb-2">Your identity: {{ farmerAcc.identity.toBase58() }}</div>
     <div class="mb-2">Associated vault: {{ farmerAcc.vault.toBase58() }}</div>
-    <div class="mb-2">Gems staked: {{ farmerAcc.gemsStaked }}</div>
-    <div class="mb-2">
+    <div class="mb-2">Items staked: {{ farmerAcc.gemsStaked }}</div>
+    <!-- <div class="mb-2">
       Min staking ends: {{ parseDate(farmerAcc.minStakingEndsTs) }}
     </div>
     <div class="mb-5">
       Cooldown ends: {{ parseDate(farmerAcc.cooldownEndsTs) }}
-    </div>
+    </div> -->
 
     <div class="flex mb-5">
       <div class="flex-1 mr-5">
@@ -23,17 +23,17 @@
           :key="farmerAcc.rewardA"
           :farmReward="farmAcc.rewardA"
           :reward="farmerAcc.rewardA"
-          title="Reward A"
+          title="$DUST Rewards"
         />
       </div>
-      <div class="flex-1">
+      <!-- <div class="flex-1">
         <FarmerRewardDisplay
           :key="farmerAcc.rewardB"
           :farmReward="farmAcc.rewardB"
           :reward="farmerAcc.rewardB"
           title="Reward B"
         />
-      </div>
+      </div> -->
     </div>
     <button class="nes-btn is-primary mb-5" @click="refreshFarmer">
       Refresh account

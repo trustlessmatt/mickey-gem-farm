@@ -4,7 +4,7 @@
     <div class="mb-2">Accrued reward: {{ reward.accruedReward }}</div>
     <div class="mb-2">Paid out reward: {{ reward.paidOutReward }}</div>
     <div v-if="parseRewardType(farmReward) === 'variable'">
-      <div class="mb-2 w-full bg-black text-white">Variable reward:</div>
+      <div class="mb-2">Variable reward:</div>
       <div class="mb-2">
         Last recorded accrued reward per gem:
         {{

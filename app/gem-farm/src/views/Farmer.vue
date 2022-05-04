@@ -29,33 +29,33 @@
       >
         <button
           v-if="farmerState === 'staked' && selectedNFTs.length > 0"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
           @click="addGems"
         >
           Add Gems (resets staking)
         </button>
         <button
           v-if="farmerState === 'unstaked'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
           @click="beginStaking"
         >
           Begin staking
         </button>
         <button
           v-if="farmerState === 'staked'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
           @click="endStaking"
         >
           End staking
         </button>
         <button
           v-if="farmerState === 'pendingCooldown'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3"
+          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
           @click="endStaking"
         >
           End cooldown
         </button>
-        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="claim">
+        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2" @click="claim">
           Claim {{ availableA }} A / {{ availableB }} B
         </button>
       </Vault>
@@ -65,7 +65,7 @@
         No staking account found with this wallet! Make a new one?
       </div>
       <div class="w-full text-center">
-        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="initFarmer">
+        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2" @click="initFarmer">
           Create New Staking Account
         </button>
       </div>
