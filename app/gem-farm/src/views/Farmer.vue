@@ -56,7 +56,7 @@
           End cooldown
         </button>
         <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2" @click="claim">
-          Claim {{ availableA }} A / {{ availableB }} B
+          Claim {{ availableA }} $DUST
         </button>
       </Vault>
     </div>
