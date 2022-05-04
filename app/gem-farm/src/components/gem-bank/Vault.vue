@@ -47,12 +47,12 @@
       :nfts="desiredVaultNFTs"
       @selected="handleVaultSelected"
     >
-      <div
+      <!-- <div
         v-if="vaultLocked"
         class="locked flex-col justify-center items-center align-center"
       >
         <p class="mt-10">This vault is locked!</p>
-      </div>
+      </div> -->
     </NFTGrid>
   </div>
 </template>
