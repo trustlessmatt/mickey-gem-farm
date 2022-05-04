@@ -1,12 +1,12 @@
 <template>
   <!--control buttons-->
-  <div class="mb-10 flex justify-center">
+  <div class="mb-10 flex justify-center ">
     <button
       v-if="
         (toWalletNFTs && toWalletNFTs.length) ||
         (toVaultNFTs && toVaultNFTs.length)
       "
-      class="nes-btn is-primary mr-5"
+      class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
       @click="moveNFTsOnChain"
     >
       Move Gems!
@@ -18,8 +18,8 @@
   <div class="flex items-stretch">
     <!--left-->
     <NFTGrid
-      title="Your wallet"
-      class="flex-1"
+      title="Your Wallet"
+      class="flex-1 p-2"
       :nfts="desiredWalletNFTs"
       @selected="handleWalletSelected"
     />
@@ -27,13 +27,11 @@
     <!--mid-->
     <div class="m-2 flex flex-col">
       <ArrowButton
-        :disabled="vaultLocked"
-        class="my-2"
+        class="my-2 mx-auto w-5"
         @click="moveNFTsFE(false)"
       />
       <ArrowButton
-        :disabled="vaultLocked"
-        class="my-2"
+        class="my-2 mx-auto w-5"
         :left="true"
         @click="moveNFTsFE(true)"
       />
@@ -42,8 +40,8 @@
     <!--right-->
     <NFTGrid
       v-if="bank && vault"
-      title="Your vault"
-      class="flex-1"
+      title="Your Staked Items"
+      class="flex-1 p-2 "
       :nfts="desiredVaultNFTs"
       @selected="handleVaultSelected"
     >
