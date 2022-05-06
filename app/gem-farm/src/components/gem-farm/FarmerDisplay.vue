@@ -1,6 +1,6 @@
 <template>
-  <div class="nes-container with-title">
-    <p class="title">Your Staking Account</p>
+  <div class="ml-20 mr-20 border-2 border-red-900 bg-gray-50 shadow-xl rounded-xl p-8">
+    <p class="text-3xl font-bold">Your Staking Account</p>
     <div class="mb-2">
       state:
       <p class="inline-block bg-yellow-200">
@@ -35,7 +35,7 @@
         />
       </div> -->
     </div>
-    <button class="nes-btn is-primary mb-5" @click="refreshFarmer">
+    <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3" @click="refreshFarmer">
       Refresh account
     </button>
   </div>

@@ -1,48 +1,23 @@
 <template>
   <div class="mb-10">
-    <p>Welcome to Gem Farm 💎 - the #1 NFT Staking solution on Solana!</p>
+    <p class="text-xl font-bold">Welcome to Mickey Degods - We're Burnin It 🍟</p>
     <p class="mt-5">
-      This front-end is primarily designed for the Farm Manager (most likely the
-      dev behind the NFT project). You probably want to build a nicer front-end
-      for your stakers (farmers 👩‍🌾).
-    </p>
-    <p class="mt-5">
-      That said, if you're a staker, in theory nothing is stopping you from
-      using this front-end to access ALL the farms you're staking with. Simply
-      go to the
-      <router-link to="/farmer" class="text-blue-700">farmer</router-link> tab
-      and enter the farm address (ask your NFT project for it).
-    </p>
-    <p class="mt-5">
-      You can find the docs
-      <a class="text-blue-600" href="https://docs.gemworks.gg/" target="_blank"
-        >here</a
-      >.
-    </p>
-    <p class="mt-5">
-      Gem Farm is deployed at:
-      <span class="bg-yellow-100">{{ GEM_FARM_PROG_ID }}</span>
+      Staking your Combos is a fickle process. Here are the rules:
+      <ol>
+        <li>Head to our Staking Area and connect your wallet.</li>
+        <li>Select your Mickey's Combo, Day 1 Fry, or Mythic Fries on the left (one at a time, people!).</li>
+        <li>Click the right arrow to send the NFT into your vault.</li>
+        <li>You can send as many valid NFTs to the vault as you want.</li>
+        <li>When you're ready, click "Begin Staking" and sign the final transaction.</li>
+        <li>Watch those $DUST gainz roll in bruh.</li>
+      </ol>
     </p>
   </div>
-  <div class="flex flex-row">
-    <div class="nes-container with-title flex-1 mr-5">
-      <p class="title">Start/manage a farm</p>
-      <p class="mb-5">
-        Choose this if you have your own NFT collection you'd like to offer
-        staking for.
-      </p>
-      <router-link to="manager">
-        <button class="nes-btn is-primary">Start a farm</button>
-      </router-link>
-    </div>
-    <div class="nes-container with-title flex-1 ml-5">
-      <p class="title">Stake your NFTs</p>
-      <p class="mb-5">
-        Choose this if you'd like to stake your NFTs at one of the existing
-        farms.
-      </p>
+  <div class="mx-auto">
+    <div class="">
+      <!-- <img src='/drink_puddle.png' alt='drink' width='300' /> -->
       <router-link to="farmer">
-        <button class="nes-btn is-primary">Stake NFTs</button>
+        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2">Get Staking</button>
       </router-link>
     </div>
   </div>

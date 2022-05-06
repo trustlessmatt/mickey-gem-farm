@@ -15,11 +15,11 @@
   </div>
 
   <!--wallet + vault view-->
-  <div class="flex items-stretch">
+  <div class="flex items-stretch mb-10 z-20">
     <!--left-->
     <NFTGrid
       title="Your Wallet"
-      class="flex-1 p-2"
+      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg"
       :nfts="desiredWalletNFTs"
       @selected="handleWalletSelected"
     />
@@ -41,7 +41,7 @@
     <NFTGrid
       v-if="bank && vault"
       title="Your Staked Items"
-      class="flex-1 p-2 "
+      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg z-20"
       :nfts="desiredVaultNFTs"
       @selected="handleVaultSelected"
     >

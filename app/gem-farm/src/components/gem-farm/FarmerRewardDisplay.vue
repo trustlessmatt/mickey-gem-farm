@@ -1,8 +1,8 @@
 <template>
-  <div class="nes-container with-title">
-    <p class="title">{{ title }}</p>
-    <div class="mb-2">Accrued reward: {{ reward.accruedReward }}</div>
-    <div class="mb-2">Paid out reward: {{ reward.paidOutReward }}</div>
+  <div class='pt-2'>
+    <p class="text-2xl">{{ title }}</p>
+    <div class="mb-2">Accrued: {{ reward.accruedReward / 1000000000 }}</div>
+    <div class="mb-2">Total paid out: {{ reward.paidOutReward / 1000000000 }}</div>
     <div v-if="parseRewardType(farmReward) === 'variable'">
       <div class="mb-2">Variable reward:</div>
       <div class="mb-2">
@@ -10,9 +10,9 @@
         {{
           numeral(
             reward.variableRate.lastRecordedAccruedRewardPerRarityPoint.n /
-              10 ** 3
+              10 ** 12
           ).format('0,0.0')
-        }}
+        }} $DUST
       </div>
     </div>
     <div v-else>
