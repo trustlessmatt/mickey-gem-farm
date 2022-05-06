@@ -2,6 +2,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import axios from 'axios';
 import { programs } from '@metaplex/js';
+import { mints } from '../util/mints.js';
 
 const {
   metadata: { Metadata },
@@ -23,7 +24,9 @@ async function getTokensByOwner(owner: PublicKey, conn: Connection) {
   return tokens.value
     .filter((t) => {
       const amount = t.account.data.parsed.info.tokenAmount;
-      return amount.decimals === 0 && amount.uiAmount === 1;
+      return amount.decimals === 0 
+      && amount.uiAmount === 1 
+      && mints.includes(t.account.data.parsed.info.mint);
     })
     .map((t) => {
       return { pubkey: t.pubkey, mint: t.account.data.parsed.info.mint };
@@ -68,7 +71,7 @@ export async function getNFTsByOwner(
   conn: Connection
 ): Promise<INFT[]> {
   const tokens = await getTokensByOwner(owner, conn);
-  console.log(`found ${tokens.length} tokens`);
+  console.log(`found ${tokens.length} Mickey assets`);
 
   return await getNFTMetadataForMany(tokens, conn);
 }
