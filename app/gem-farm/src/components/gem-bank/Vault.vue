@@ -1,61 +1,49 @@
 <template>
   <!--control buttons-->
-  <div class="mb-10 flex justify-center ">
+  <loading :active='isLoading' :is-full-page="fullPage" :loader='loader' />
+  <div class="mb-10 flex justify-center">
     <button
-      v-if="
-        (toWalletNFTs && toWalletNFTs.length) ||
-        (toVaultNFTs && toVaultNFTs.length)
-      "
-      class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
-      @click="moveNFTsOnChain"
+      v-if="initialWalletNFTs.length > 0"
+      class="mr-5 bg-green-700 hover:bg-green-700 text-white font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
+      @click="depositAllNFTOnChain"
     >
-      Move Gems!
+      Stake All
+    </button>
+    <button
+      v-if="initialVaultNFTs.length > 0"
+      class="mr-5 bg-red-700 hover:bg-red-700 text-white font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+      @click="withdrawAllNFTOnChain"
+    >
+      Unstake All
     </button>
     <slot />
   </div>
 
   <!--wallet + vault view-->
-  <div class="flex items-stretch mb-10 z-20">
+  <div class="flex flex-col md:flex-row items-stretch space-x-4">
     <!--left-->
     <NFTGrid
       title="Your Wallet"
-      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg"
-      :nfts="desiredWalletNFTs"
-      @selected="handleWalletSelected"
+      class="flex-1"
+      :nfts="initialWalletNFTs"
+      :selectedNFT="selectedNFT"
+      :staked="false"
+      @selected="depositNFTOnChain"
     />
-
-    <!--mid-->
-    <div class="m-2 flex flex-col">
-      <ArrowButton
-        class="my-2 mx-auto w-5"
-        @click="moveNFTsFE(false)"
-      />
-      <ArrowButton
-        class="my-2 mx-auto w-5"
-        :left="true"
-        @click="moveNFTsFE(true)"
-      />
-    </div>
-
     <!--right-->
     <NFTGrid
       v-if="bank && vault"
-      title="Your Staked Items"
-      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg z-20"
-      :nfts="desiredVaultNFTs"
-      @selected="handleVaultSelected"
-    >
-      <!-- <div
-        v-if="vaultLocked"
-        class="locked flex-col justify-center items-center align-center"
-      >
-        <p class="mt-10">This vault is locked!</p>
-      </div> -->
-    </NFTGrid>
+      title="Staked Meals"
+      class="flex-1"
+      :nfts="initialVaultNFTs"
+      :selectedNFT="selectedNFT"
+      :staked="true"
+      @selected="withdrawNFTOnChain"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import NFTGrid from '@/components/gem-bank/NFTGrid.vue';
 import ArrowButton from '@/components/ArrowButton.vue';
@@ -67,57 +55,63 @@ import {
   INFT,
 } from '@/common/web3/NFTget';
 import { initGemBank } from '@/common/gem-bank';
+import { initGemFarm } from '@/common/gem-farm';
 import { PublicKey } from '@solana/web3.js';
 import { getListDiffBasedOnMints, removeManyFromList } from '@/common/util';
 import { BN } from '@project-serum/anchor';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default defineComponent({
-  components: { ArrowButton, NFTGrid },
+  components: { ArrowButton, NFTGrid, Loading },
   props: {
     vault: String,
+    farmerAcc: Object,
+    farmerState: String
   },
-  emits: ['selected-wallet-nft'],
+  emits: ['selected-wallet-nft', 'fetchFarm', 'fetchFarmer', 'flash-deposit-wallet-nft'],
   setup(props, ctx) {
     const { wallet, getWallet } = useWallet();
     const { cluster, getConnection } = useCluster();
+
+    // --------------------------------------- loading
+
+    //current walet/vault state
+    const isLoading = ref<boolean>(false);
 
     // --------------------------------------- state
 
     //current walet/vault state
     const currentWalletNFTs = ref<INFT[]>([]);
     const currentVaultNFTs = ref<INFT[]>([]);
+    //initial walet/vault state
+    const initialWalletNFTs = ref<INFT[]>([]);
+    const initialVaultNFTs = ref<INFT[]>([]);
     //selected but not yet moved over in FE
-    const selectedWalletNFTs = ref<INFT[]>([]);
-    const selectedVaultNFTs = ref<INFT[]>([]);
-    //moved over in FE but not yet onchain
-    const desiredWalletNFTs = ref<INFT[]>([]);
-    const desiredVaultNFTs = ref<INFT[]>([]);
-    //moved over onchain
-    const toWalletNFTs = ref<INFT[]>([]);
-    const toVaultNFTs = ref<INFT[]>([]);
+    const selectedNFT = ref<INFT>();
+    //selected wallet or vault
+    const selectedLocation = ref<String>();
 
     // --------------------------------------- populate initial nfts
 
     const populateWalletNFTs = async () => {
       // zero out to begin with
       currentWalletNFTs.value = [];
-      selectedWalletNFTs.value = [];
-      desiredWalletNFTs.value = [];
+      initialWalletNFTs.value = [];
 
       if (getWallet()) {
         currentWalletNFTs.value = await getNFTsByOwner(
           getWallet()!.publicKey!,
           getConnection()
         );
-        desiredWalletNFTs.value = [...currentWalletNFTs.value];
+        initialWalletNFTs.value = [...currentWalletNFTs.value];
       }
     };
 
     const populateVaultNFTs = async () => {
       // zero out to begin with
       currentVaultNFTs.value = [];
-      selectedVaultNFTs.value = [];
-      desiredVaultNFTs.value = [];
+      initialVaultNFTs.value = [];
 
       const foundGDRs = await gb.fetchAllGdrPDAs(vault.value);
       if (foundGDRs && foundGDRs.length) {
@@ -131,7 +125,10 @@ export default defineComponent({
           mints,
           getConnection()
         );
-        desiredVaultNFTs.value = [...currentVaultNFTs.value];
+
+        console.log(currentVaultNFTs.value)
+
+        initialVaultNFTs.value = [...currentVaultNFTs.value];
         console.log(
           `populated a total of ${currentVaultNFTs.value.length} vault NFTs`
         );
@@ -141,11 +138,11 @@ export default defineComponent({
     const updateVaultState = async () => {
       vaultAcc.value = await gb.fetchVaultAcc(vault.value);
       bank.value = vaultAcc.value.bank;
-      vaultLocked.value = vaultAcc.value.locked;
     };
 
     watch([wallet, cluster], async () => {
       gb = await initGemBank(getConnection(), getWallet()!);
+      gf = await initGemFarm(getConnection(), getWallet()!);
 
       //populate wallet + vault nfts
       await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
@@ -153,6 +150,7 @@ export default defineComponent({
 
     onMounted(async () => {
       gb = await initGemBank(getConnection(), getWallet()!);
+      gf = await initGemFarm(getConnection(), getWallet()!);
 
       //prep vault + bank variables
       vault.value = new PublicKey(props.vault!);
@@ -164,85 +162,132 @@ export default defineComponent({
 
     // --------------------------------------- moving nfts
 
-    const handleWalletSelected = (e: any) => {
-      if (e.selected) {
-        selectedWalletNFTs.value.push(e.nft);
+    const resetSelectedNft = () => {
+      selectedLocation.value = undefined
+      selectedNFT.value = undefined
+    }
+
+    const depositNFTOnChain = async(e: any) => {
+      const selectedWalletNFT = e.nft
+      const anySelectNFT = (selectedWalletNFT as any)
+      if (props.farmerState === "staked") {
+          ctx.emit('flash-deposit-wallet-nft', selectedWalletNFT);
       } else {
-        const index = selectedWalletNFTs.value.indexOf(e.nft);
-        selectedWalletNFTs.value.splice(index, 1);
+        const creator = new PublicKey(
+          (anySelectNFT.onchainMetadata as any).data.creators[0].address
+        );
+        await depositGem(anySelectNFT.mint, creator, anySelectNFT.pubkey!);
       }
-      ctx.emit('selected-wallet-nft', selectedWalletNFTs.value);
+      await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
+    }
+
+    const depositAllNFTOnChain = async() => {
+      isLoading.value = true;
+      try {
+        const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
+        const { txSig } = await gf.stakeAllGemsWallet(
+          bank.value,
+          vault.value,
+          new BN(1),
+          initialWalletNFTs.value.map(x => x.mint),
+          initialWalletNFTs.value.map(x => x.pubkey!),
+          initialWalletNFTs.value.map(x => {
+            return new PublicKey((x.onchainMetadata as any).data.creators[0].address)
+          }),
+          new PublicKey(farm.value!),
+          props.farmerState === "staked"
+        );
+        console.log('deposit done', txSig);
+      } catch (err) {
+        console.log(err)
+      } finally {
+        ctx.emit('fetchFarm');
+        ctx.emit('fetchFarmer');
+        await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
+        isLoading.value = false;
+      }
     };
 
-    const handleVaultSelected = (e: any) => {
-      if (e.selected) {
-        selectedVaultNFTs.value.push(e.nft);
-      } else {
-        const index = selectedVaultNFTs.value.indexOf(e.nft);
-        selectedVaultNFTs.value.splice(index, 1);
+
+    const withdrawNFTOnChain = async(e: any) => {
+      const selectedVaultNFT = e.nft;
+      const anySelectNFT = (selectedVaultNFT as any);
+      await withdrawGem(anySelectNFT.mint);
+    }
+
+    const withdrawAllNFTOnChain = async() => {
+      isLoading.value = true;
+      try {
+        const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
+        const { txSig } = await gf.unstakeAllGemsWallet(
+          bank.value,
+          vault.value,
+          new BN(1),
+          initialVaultNFTs.value.map(x => x.mint),
+          new PublicKey(farm.value!)
+        );
+        console.log('withdrawal done', txSig);
+      } catch (err) {
+        console.log(err)
+      } finally {
+        ctx.emit('fetchFarm');
+        ctx.emit('fetchFarmer');
+        await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
+        isLoading.value = false;
       }
     };
 
-    const moveNFTsFE = (moveLeft: boolean) => {
-      if (moveLeft) {
-        //push selected vault nfts into desired wallet
-        desiredWalletNFTs.value.push(...selectedVaultNFTs.value);
-        //remove selected vault nfts from desired vault
-        removeManyFromList(selectedVaultNFTs.value, desiredVaultNFTs.value);
-        //empty selection list
-        selectedVaultNFTs.value = [];
+    const handleNFTWalletSelected = (e: any) =>{
+      if (e.selected) {
+        selectedLocation.value = "wallet"
+      }else{
+        selectedLocation.value = undefined
+      }
+      handleNFTSelected(e)
+    }
+    const handleNFTVaultSelected = (e: any) =>{
+      if (e.selected) {
+        selectedLocation.value = "vault"
+      }else{
+        selectedLocation.value = undefined
+      }
+      handleNFTSelected(e)
+    }
+
+    const handleNFTSelected = (e: any) => {
+      if (e.selected) {
+        selectedNFT.value = e.nft
+        console.log(selectedNFT.value)
+        if (selectedLocation.value === "wallet"){
+          ctx.emit('selected-wallet-nft', selectedNFT.value);
+        } else {
+          ctx.emit('selected-wallet-nft', null);
+        }
       } else {
-        //push selected wallet nfts into desired vault
-        desiredVaultNFTs.value.push(...selectedWalletNFTs.value);
-        //remove selected wallet nfts from desired wallet
-        removeManyFromList(selectedWalletNFTs.value, desiredWalletNFTs.value);
-        //empty selected walelt
-        selectedWalletNFTs.value = [];
+        selectedNFT.value = undefined
+        ctx.emit('selected-wallet-nft', null);
       }
     };
 
     //todo jam into single tx
-    const moveNFTsOnChain = async () => {
-      for (const nft of toVaultNFTs.value) {
-        console.log(nft);
+    const moveNFTOnChain = async () => {
+      const anySelectNFT = (selectedNFT.value as any)
+      if (selectedLocation.value !== "wallet") {
+        await withdrawGem(anySelectNFT.mint);
+      }else{
         const creator = new PublicKey(
           //todo currently simply taking the 1st creator
-          (nft.onchainMetadata as any).data.creators[0].address
+          (anySelectNFT.onchainMetadata as any).data.creators[0].address
         );
-        console.log('creator is', creator.toBase58());
-        await depositGem(nft.mint, creator, nft.pubkey!);
+        await depositGem(anySelectNFT.mint, creator, anySelectNFT.pubkey!);
       }
-      for (const nft of toWalletNFTs.value) {
-        await withdrawGem(nft.mint);
-      }
+      resetSelectedNft();
       await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
     };
 
-    //to vault = vault desired - vault current
-    watch(
-      desiredVaultNFTs,
-      () => {
-        toVaultNFTs.value = getListDiffBasedOnMints(
-          desiredVaultNFTs.value,
-          currentVaultNFTs.value
-        );
-        console.log('to vault nfts are', toVaultNFTs.value);
-      },
-      { deep: true }
-    );
+    // --------------------------------------- gem farm
 
-    //to wallet = wallet desired - wallet current
-    watch(
-      desiredWalletNFTs,
-      () => {
-        toWalletNFTs.value = getListDiffBasedOnMints(
-          desiredWalletNFTs.value,
-          currentWalletNFTs.value
-        );
-        console.log('to wallet nfts are', toWalletNFTs.value);
-      },
-      { deep: true }
-    );
+    let gf: any;
 
     // --------------------------------------- gem bank
 
@@ -258,39 +303,71 @@ export default defineComponent({
       creator: PublicKey,
       source: PublicKey
     ) => {
-      const { txSig } = await gb.depositGemWallet(
-        bank.value,
-        vault.value,
-        new BN(1),
-        mint,
-        source,
-        creator
-      );
-      console.log('deposit done', txSig);
+      isLoading.value = true;
+      try {
+        const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
+        const { txSig } = await gf.depositGemStakeWallet(
+          bank.value,
+          vault.value,
+          new BN(1),
+          mint,
+          source,
+          creator,
+          new PublicKey(farm.value!)
+        );
+        console.log('deposit done', txSig);
+      } catch (err) {
+        console.log(err)
+      } finally {
+        ctx.emit('fetchFarm');
+        ctx.emit('fetchFarmer');
+        await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
+        isLoading.value = false;
+      }
     };
 
     const withdrawGem = async (mint: PublicKey) => {
-      const { txSig } = await gb.withdrawGemWallet(
-        bank.value,
-        vault.value,
-        new BN(1),
-        mint
-      );
-      console.log('withdrawal done', txSig);
+      isLoading.value = true;
+      try {
+        const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
+        const { txSig } = await gf.unstakeWithdrawGemWallet(
+          bank.value,
+          vault.value,
+          new BN(1),
+          mint,
+          new PublicKey(farm.value!),
+          props.farmerAcc!.gemsStaked
+        );
+        console.log('withdrawal done', txSig);
+      } catch (err) {
+        console.log(err)
+      } finally {
+        ctx.emit('fetchFarm');
+        ctx.emit('fetchFarmer');
+        await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
+        isLoading.value = false;
+      }
     };
 
     // --------------------------------------- return
 
     return {
+      isLoading,
+      fullPage: true,
+      loader: 'bars',
       wallet,
-      desiredWalletNFTs,
-      desiredVaultNFTs,
-      toVaultNFTs,
-      toWalletNFTs,
-      handleWalletSelected,
-      handleVaultSelected,
-      moveNFTsFE,
-      moveNFTsOnChain,
+      initialWalletNFTs,
+      initialVaultNFTs,
+      selectedNFT,
+      selectedLocation,
+      handleNFTSelected,
+      withdrawNFTOnChain,
+      depositNFTOnChain,
+      handleNFTVaultSelected,
+      handleNFTWalletSelected,
+      withdrawAllNFTOnChain,
+      depositAllNFTOnChain,
+      moveNFTOnChain,
       bank,
       // eslint-disable-next-line vue/no-dupe-keys
       vault,

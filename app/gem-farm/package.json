@@ -7,19 +7,16 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
-    "update": "yarn upgrade @gemworks/gem-farm-ts --latest --check-files",
-    "update:anchor": "yarn upgrade @project-serum/anchor --latest --check-files"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@gemworks/gem-farm-ts": "^0.24.1",
     "@metaplex/js": "^4.9.0",
-    "@project-serum/anchor": "0.24.2",
+    "@project-serum/anchor": "^0.18.2",
     "@solana/spl-token": "^0.1.8",
     "@solana/wallet-adapter-base": "^0.7.1",
     "@solana/wallet-adapter-wallets": "^0.11.3",
     "@solana/web3.js": "^1.31.0",
-    "@strata-foundation/web3-token-auth": "^3.4.6",
+    "@strata-foundation/web3-token-auth": "^3.5.4",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",

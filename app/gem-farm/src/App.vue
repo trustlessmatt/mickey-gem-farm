@@ -8,16 +8,16 @@
     <div class="p-10">
       <router-view />
     </div>
-    <div className="relative hidden sm:block z-0">
+    <div className="relative hidden sm:block">
       <img
         src="/drink_puddle.png"
         alt="Drink Puddle"
-        className=" w-52 fixed bottom-0 left-10"
+        className="z-0 w-52 fixed bottom-0 left-10"
       />
       <img
         src="/FriesPuddle.png"
         alt="Fries"
-        className="w-20 fixed bottom-0 right-10"
+        className="z-0 w-20 fixed bottom-0 right-10"
       />
     </div>
   </div>

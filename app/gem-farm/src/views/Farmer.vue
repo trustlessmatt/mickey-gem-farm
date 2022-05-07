@@ -15,14 +15,14 @@
         <div
           class="flex flex-col w-full sm:w-96 text-center p-3 sm:p-1 justify-center"
         >
-          <div class="text-base">% of Meals Not Thrown Out (Staked)</div>
+          <div class="text-base">% of Meals Staked</div>
           <div v-if="farmAcc" class="text-6xl farm-value">
             {{
-              Math.floor((parseInt(farmAcc?.gemsStaked) / 205.0) * 100 * 10) /
+              Math.floor((parseInt(farmAcc?.gemsStaked) / 209.0) * 100 * 10) /
               10
             }}%
           </div>
-          <div v-else class="text-6xl farm-value">{{ 0 }}%</div>
+          <div v-else class="text-6xl farm-value">{{ 333 }}%</div>
         </div>
       </div>
       <ConfigPane />
@@ -30,14 +30,6 @@
   </div>
   <div v-else>
     <!--farm address-->
-    <!-- <div class="nes-container with-title mb-10">
-      <p class="title">Connect to a Farm</p>
-      <div class="nes-field mb-5">
-        <label for="farm">Farm address:</label>
-        <input id="farm" class="nes-input" v-model="farm" />
-      </div>
-    </div> -->
-
     <div v-if="farmerAcc">
       <FarmerDisplay
         :key="farmerAcc"
@@ -45,45 +37,36 @@
         :farmAcc="farmAcc"
         :farmer="farmer"
         :farmerAcc="farmerAcc"
-        class="mb-10"
+        class="mb-10 z-20"
         @refresh-farmer="handleRefreshFarmer"
       />
       <Vault
         :key="farmerAcc"
         class="mb-10"
         :vault="farmerAcc.vault.toBase58()"
+        :farmerAcc="farmerAcc"
+        :farmerState="farmerState"
         @selected-wallet-nft="handleNewSelectedNFT"
+        @flash-deposit-wallet-nft="flashDepositSelectedNFT"
+        @fetchFarm="fetchFarn"
+        @fetchFarmer="fetchFarmer"
       >
         <button
-          v-if="farmerState === 'staked' && selectedNFTs.length > 0"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
-          @click="addGems"
+          v-if="
+            (farmerAcc.rewardA.accruedReward -
+              farmerAcc.rewardA.paidOutReward) /
+              1000000000 +
+              (parseInt(farmerAcc.gemsStaked) *
+                (Math.round(currentTS / 1000) -
+                  farmerAcc.rewardA.fixedRate.lastUpdatedTs) *
+                12) /
+                86400 >
+            0
+          "
+          class="mr-5 bg-purple-700 hover:bg-purple-700 text-white font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
+          @click="claim"
         >
-          Add Gems (resets staking)
-        </button>
-        <button
-          v-if="farmerState === 'unstaked'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
-          @click="beginStaking"
-        >
-          Begin staking
-        </button>
-        <button
-          v-if="farmerState === 'staked'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
-          @click="endStaking"
-        >
-          End staking
-        </button>
-        <button
-          v-if="farmerState === 'pendingCooldown'"
-          class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
-          @click="endStaking"
-        >
-          End cooldown
-        </button>
-        <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2" @click="claim">
-          Claim {{ availableA / 1000000000 }} $DUST
+          Claim $DUST
         </button>
       </Vault>
     </div>
@@ -231,17 +214,6 @@ export default defineComponent({
     };
 
     // --------------------------------------- staking
-    const beginStaking = async () => {
-      await gf.stakeWallet(new PublicKey(farm.value!));
-      await fetchFarmer();
-      selectedNFTs.value = [];
-    };
-
-    const endStaking = async () => {
-      await gf.unstakeWallet(new PublicKey(farm.value!));
-      await fetchFarmer();
-      selectedNFTs.value = [];
-    };
 
     const claim = async () => {
       isLoading.value = true;
@@ -264,11 +236,15 @@ export default defineComponent({
     };
 
     // --------------------------------------- adding extra gem
-    const selectedNFTs = ref<INFT[]>([]);
+    const selectedNFT = ref<INFT>();
 
-    const handleNewSelectedNFT = (newSelectedNFTs: INFT[]) => {
-      console.log(`selected ${newSelectedNFTs.length} NFTs`);
-      selectedNFTs.value = newSelectedNFTs;
+    const resetSelectedNft = () => {
+      selectedNFT.value = undefined;
+    };
+
+    const handleNewSelectedNFT = (newSelectedNFT: INFT) => {
+      console.log(`selected NFT`);
+      selectedNFT.value = newSelectedNFT;
     };
 
     const addSingleGem = async (
@@ -283,24 +259,33 @@ export default defineComponent({
         gemSource,
         creator
       );
-      await fetchFarmer();
+      resetSelectedNft();
     };
 
-    const addGems = async () => {
-      await Promise.all(
-        selectedNFTs.value.map((nft) => {
-          const creator = new PublicKey(
-            //todo currently simply taking the 1st creator
-            (nft.onchainMetadata as any).data.creators[0].address
-          );
-          console.log('creator is', creator.toBase58());
+    const flashDepositSelectedNFT = async (newSelectedNFT: INFT) => {
+      selectedNFT.value = newSelectedNFT;
+      await addGem();
+    };
 
-          addSingleGem(nft.mint, nft.pubkey!, creator);
-        })
-      );
-      console.log(
-        `added another ${selectedNFTs.value.length} gems into staking vault`
-      );
+    const addGem = async () => {
+      isLoading.value = true;
+      try {
+        const anySelectNFT = selectedNFT.value as any;
+        const creator = new PublicKey(
+          (anySelectNFT.onchainMetadata as any).data.creators[0].address
+        );
+        console.log('creator is', creator.toBase58());
+        await addSingleGem(anySelectNFT.mint, anySelectNFT.pubkey!, creator);
+
+        console.log(
+          `added another ${anySelectNFT.length} gems into staking vault`
+        );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        await fetchFarmer();
+        isLoading.value = false;
+      }
     };
 
     return {
@@ -317,13 +302,14 @@ export default defineComponent({
       availableA,
       availableB,
       initFarmer,
-      beginStaking,
-      endStaking,
       claim,
       handleRefreshFarmer,
-      selectedNFTs,
+      flashDepositSelectedNFT,
+      selectedNFT,
       handleNewSelectedNFT,
-      addGems,
+      addGem,
+      fetchFarn,
+      fetchFarmer,
     };
   },
 });

@@ -1,12 +1,14 @@
 <template>
-  <div class="nes-container with-title">
-    <p class="title">{{ title }}</p>
+  <div class="px-2">
+    <p class="text-center font-bold">{{ title }}</p>
     <slot />
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap justify-center">
       <NFTCard
         v-for="nft in nfts"
         :key="nft"
         :nft="nft"
+        :staked="staked"
+        :selectedNFT="selectedNFT"
         @selected="handleSelected"
       />
     </div>
@@ -23,6 +25,8 @@ export default defineComponent({
   props: {
     title: String,
     nfts: Array,
+    selectedNFT: Object,
+    staked: Boolean,
   },
   setup(props, ctx) {
     const handleSelected = (e: any) => {

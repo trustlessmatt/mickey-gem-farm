@@ -1202,6 +1202,11 @@
     bs58 "^4.0.1"
     eventemitter3 "^4.0.7"
 
+"@sailshq/lodash@^3.10.2":
+  version "3.10.4"
+  resolved "https://registry.yarnpkg.com/@sailshq/lodash/-/lodash-3.10.4.tgz#2299648a81a67f4c6ee222c6cf8e261bd9c3fa50"
+  integrity sha512-YXJqp9gdHcZKAmBY/WnwFpPtNQp2huD/ME2YMurH2YHJvxrVzYsmpKw/pb7yINArRpp8E++fwbQd3ajYXGA45Q==
+
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@soda/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.8.1.tgz#4d4fbb1108993aaa362116247c3d18188a2c6c85"
@@ -2397,6 +2402,14 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+anchor@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/anchor/-/anchor-1.4.0.tgz#6ab2b8a5d9ebf2939c45ce57ed8fef80aecd99b0"
+  integrity sha512-xEu0UWxNa3p5v3MmXN9id5tsMSiniCyzWamf/R3KRkJieSRdXdAWu0Z+tXIpDZbbVLWZSMnD1VEguuYX2s9xag==
+  dependencies:
+    "@sailshq/lodash" "^3.10.2"
+    validator "5.7.0"
 
 ansi-colors@3.2.3:
   version "3.2.3"
@@ -10382,6 +10395,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-5.7.0.tgz#7a87a58146b695ac486071141c0c49d67da05e5c"
+  integrity sha1-eoelgUa2laxIYHEUHAxJ1n2gXlw=
 
 vary@~1.1.2:
   version "1.1.2"

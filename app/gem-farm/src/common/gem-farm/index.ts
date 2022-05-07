@@ -1,5 +1,6 @@
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
+import * as anchor from '@project-serum/anchor';
 import { BN, Idl } from '@project-serum/anchor';
 import { createFakeWallet } from '@/common/gem-bank';
 import {
@@ -21,7 +22,7 @@ export async function initGemFarm(
   const walletToUse = wallet ?? createFakeWallet();
   const farmIdl = await (await fetch('gem_farm.json')).json();
   const bankIdl = await (await fetch('gem_bank.json')).json();
-  return new GemFarm(conn, walletToUse as any, farmIdl, bankIdl);
+  return new GemFarm(conn, walletToUse as anchor.Wallet, farmIdl, bankIdl);
 }
 
 export class GemFarm extends GemFarmClient {
@@ -242,7 +243,105 @@ export class GemFarm extends GemFarmClient {
 
     return result;
   }
+  
+  async stakeAllGemsWallet(
+    bank: PublicKey,
+    vault: PublicKey,
+    gemAmount: BN,
+    gemMints: PublicKey[],
+    gemSources: PublicKey[],
+    creators: PublicKey[],
+    farm: PublicKey,
+    staked: Boolean
+  ) {
 
+    return this.stakeAllGems(
+      bank,
+      vault,
+      this.wallet.publicKey,
+      gemAmount,
+      gemMints,
+      gemSources,
+      creators,
+      farm,
+      this.wallet.publicKey,
+      staked
+    );
+  }
+  
+  async depositGemStakeWallet(
+    bank: PublicKey,
+    vault: PublicKey,
+    gemAmount: BN,
+    gemMint: PublicKey,
+    gemSource: PublicKey,
+    creator: PublicKey,
+    farm: PublicKey
+  ) {
+    const [mintProof, bump] = await this.findWhitelistProofPDA(bank, gemMint);
+    const [creatorProof, bump2] = await this.findWhitelistProofPDA(
+      bank,
+      creator
+    );
+    const metadata = await programs.metadata.Metadata.getPDA(gemMint);
+
+    return this.depositGemStake(
+      bank,
+      vault,
+      this.wallet.publicKey,
+      gemAmount,
+      gemMint,
+      gemSource,
+      farm,
+      this.wallet.publicKey,
+      mintProof,
+      metadata,
+      creatorProof
+    );
+  }
+  
+  async unstakeAllGemsWallet(
+    bank: PublicKey,
+    vault: PublicKey,
+    gemAmount: BN,
+    gemMints: PublicKey[],
+    farm: PublicKey
+  ) {
+
+    return this.unstakeAllGems(
+      bank,
+      vault,
+      this.wallet.publicKey,
+      gemAmount,
+      gemMints,
+      this.wallet.publicKey,
+      farm,
+      this.wallet.publicKey
+    );
+  }
+  
+  async unstakeWithdrawGemWallet(
+    bank: PublicKey,
+    vault: PublicKey,
+    gemAmount: BN,
+    gemMint: PublicKey,
+    farm: PublicKey,
+    gemsStaked: Number
+  ) {
+
+    return this.unstakeWithdrawGem(
+      bank,
+      vault,
+      this.wallet.publicKey,
+      gemAmount,
+      gemMint,
+      this.wallet.publicKey,
+      farm,
+      this.wallet.publicKey,
+      gemsStaked
+    );
+  }
+  
   async stakeWallet(farm: PublicKey) {
     const result = await this.stake(farm, this.wallet.publicKey);
 
