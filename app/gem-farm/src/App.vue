@@ -9,11 +9,11 @@
       <router-view />
     </div>
     <div className="relative hidden sm:block z-0">
-      <img
+      <!-- <img
         src="/drink_puddle.png"
         alt="Drink Puddle"
         className=" w-52 fixed bottom-0 left-10"
-      />
+      /> -->
       <img
         src="/FriesPuddle.png"
         alt="Fries"
