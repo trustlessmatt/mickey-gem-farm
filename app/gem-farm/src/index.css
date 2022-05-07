@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: mickeys;
+  src: url('/public/ShadowsIntoLight-Regular.ttf');
+}
+
+* {
+  font-family: 'mickeys', monospace;
+}

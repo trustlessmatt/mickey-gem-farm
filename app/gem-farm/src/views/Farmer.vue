@@ -1,6 +1,33 @@
 <template>
-  <ConfigPane />
-  <div v-if="!wallet" class="text-center">Pls connect (burner) wallet</div>
+  <loading :active="isLoading" :is-full-page="fullPage" :loader="loader" />
+  <div v-if="!wallet" class="flex justify-center ">
+    <div class="justify-center w-full flex flex-col">
+      <div class="flex flex-col sm:flex-row justify-center mb-10">
+        <div
+          class="flex flex-col w-full sm:w-96 text-center p-3 sm:p-1 justify-center"
+        >
+          <div class="text-base">Total Menu Items Staked</div>
+          <div v-if="farmAcc" class="text-6xl farm-value">
+            {{ farmAcc?.gemsStaked }}
+          </div>
+          <div v-else class="text-6xl farm-value">{{ 0 }}</div>
+        </div>
+        <div
+          class="flex flex-col w-full sm:w-96 text-center p-3 sm:p-1 justify-center"
+        >
+          <div class="text-base">% of Meals Not Thrown Out (Staked)</div>
+          <div v-if="farmAcc" class="text-6xl farm-value">
+            {{
+              Math.floor((parseInt(farmAcc?.gemsStaked) / 205.0) * 100 * 10) /
+              10
+            }}%
+          </div>
+          <div v-else class="text-6xl farm-value">{{ 0 }}%</div>
+        </div>
+      </div>
+      <ConfigPane />
+    </div>
+  </div>
   <div v-else>
     <!--farm address-->
     <!-- <div class="nes-container with-title mb-10">
@@ -84,22 +111,32 @@ import FarmerDisplay from '@/components/gem-farm/FarmerDisplay.vue';
 import Vault from '@/components/gem-bank/Vault.vue';
 import { INFT } from '@/common/web3/NFTget';
 import { findFarmerPDA, stringifyPKsAndBNs } from '@gemworks/gem-farm-ts';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default defineComponent({
-  components: { Vault, FarmerDisplay, ConfigPane },
+  components: { Vault, FarmerDisplay, ConfigPane, Loading },
+
+  created() {
+    setInterval(() => {
+      this.currentTS = Date.now();
+    }, 1000);
+  },
+
   setup() {
     const { wallet, getWallet } = useWallet();
     const { cluster, getConnection } = useCluster();
 
     let gf: any;
+    let initGf: any;
     watch([wallet, cluster], async () => {
       await freshStart();
     });
 
-    //needed in case we switch in from another window
-    onMounted(async () => {
-      await freshStart();
-    });
+    // --------------------------------------- loading
+
+    //current walet/vault state
+    const isLoading = ref<boolean>(false);
 
     // --------------------------------------- farmer details
     const farm = ref<string>("7hVwjcQ8Gf1p3mFRBtNPUU9SofnuxbneQXSaz9jM4dvF");
@@ -112,8 +149,8 @@ export default defineComponent({
     const availableA = ref<string>();
     const availableB = ref<string>();
 
-    //auto loading for when farm changes
-    watch(farm, async () => {
+    //needed in case we switch in from another window
+    onMounted(async () => {
       await freshStart();
     });
 
@@ -124,6 +161,14 @@ export default defineComponent({
       availableB.value = farmerAcc.value.rewardB.accruedReward
         .sub(farmerAcc.value.rewardB.paidOutReward)
         .toString();
+    };
+
+    const fetchInitFarm = async () => {
+      farmAcc.value = await initGf.fetchFarmAcc(new PublicKey(farm.value!));
+      console.log(
+        `farm found at ${farm.value}:`,
+        stringifyPKsAndBNs(farmAcc.value)
+      );
     };
 
     const fetchFarn = async () => {
@@ -151,6 +196,7 @@ export default defineComponent({
 
     const freshStart = async () => {
       if (getWallet() && getConnection()) {
+        isLoading.value = true;
         gf = await initGemFarm(getConnection(), getWallet()!);
         farmerIdentity.value = getWallet()!.publicKey?.toBase58();
 
@@ -164,15 +210,24 @@ export default defineComponent({
         try {
           await fetchFarn();
           await fetchFarmer();
+          isLoading.value = false;
         } catch (e) {
+          isLoading.value = false;
           console.log(`farm with PK ${farm.value} not found :(`);
         }
       }
     };
 
     const initFarmer = async () => {
-      await gf.initFarmerWallet(new PublicKey(farm.value!));
-      await fetchFarmer();
+      isLoading.value = true;
+      try {
+        await gf.initFarmerWallet(new PublicKey(farm.value!));
+        await fetchFarmer();
+      } catch (err) {
+        console.log(err);
+      } finally {
+        isLoading.value = false;
+      }
     };
 
     // --------------------------------------- staking
@@ -189,12 +244,19 @@ export default defineComponent({
     };
 
     const claim = async () => {
-      await gf.claimWallet(
-        new PublicKey(farm.value!),
-        new PublicKey(farmAcc.value.rewardA.rewardMint!),
-        new PublicKey(farmAcc.value.rewardB.rewardMint!)
-      );
-      await fetchFarmer();
+      isLoading.value = true;
+      try {
+        await gf.claimWallet(
+          new PublicKey(farm.value!),
+          new PublicKey(farmAcc.value.rewardA.rewardMint!),
+          new PublicKey(farmAcc.value.rewardB.rewardMint!)
+        );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        await fetchFarmer();
+        isLoading.value = false;
+      }
     };
 
     const handleRefreshFarmer = async () => {
@@ -242,6 +304,10 @@ export default defineComponent({
     };
 
     return {
+      currentTS: Date.now(),
+      isLoading,
+      fullPage: true,
+      loader: 'bars',
       wallet,
       farm,
       farmAcc,
