@@ -9,7 +9,7 @@
       class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2"
       @click="moveNFTsOnChain"
     >
-      Move Gems!
+      Move NFTs!
     </button>
     <slot />
   </div>
@@ -19,7 +19,7 @@
     <!--left-->
     <NFTGrid
       title="Your Wallet"
-      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg"
+      class="flex-1 p-2 border border-red-900 bg-gray-50 rounded-xl shadow-lg"
       :nfts="desiredWalletNFTs"
       @selected="handleWalletSelected"
     />
@@ -40,8 +40,8 @@
     <!--right-->
     <NFTGrid
       v-if="bank && vault"
-      title="Your Staked Items"
-      class="flex-1 p-2 border border-red-900 rounded-xl shadow-lg z-20"
+      title="Your Staking Vault"
+      class="flex-1 p-2 border border-red-900 bg-gray-50 rounded-xl shadow-lg z-20"
       :nfts="desiredVaultNFTs"
       @selected="handleVaultSelected"
     >
