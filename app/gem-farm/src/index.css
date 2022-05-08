@@ -5,9 +5,9 @@
 
 @font-face {
   font-family: mickeys;
-  src: url('/public/ShadowsIntoLight-Regular.ttf');
+  src: url('../public/ShadowsIntoLight-Regular.ttf');
 }
 
 * {
-  font-family: 'mickeys', monospace;
+  font-family: 'mickeys';
 }

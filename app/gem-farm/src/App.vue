@@ -32,9 +32,7 @@ export default {
 </script>
 
 <style>
-* {
-  font-family: monospace;
-}
+
 input[type='radio']:checked + span {
   @apply text-black;
 }
