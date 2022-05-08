@@ -2,14 +2,24 @@
   <div class="mb-10">
     <p class="text-xl font-bold">Welcome to Mickey Degods - We're Burnin It 🍟</p>
     <p class="mt-5">
-      Staking your Combos is a fickle process. Here are the rules:
+      Staking your Combos is a fickle process. Here's a quick overview:
       <ol>
-        <li>Head to our Staking Area and connect your wallet.</li>
-        <li>Select your Mickey's Combo, Day 1 Fry, or Mythic Fries on the left (one at a time, people!).</li>
-        <li>Click the right arrow to send the NFT into your vault.</li>
-        <li>You can send as many valid NFTs to the vault as you want.</li>
-        <li>When you're ready, click "Begin Staking" and sign the final transaction.</li>
-        <li>Watch those $DUST gainz roll in bruh.</li>
+        <li>1. Head to our Staking Area and connect your wallet.</li>
+        <li>2. Select your Mickey's Combo, Day 1 Fry, or Mythic Fries on the left. You may select multiple and move them over at together.</li>
+        <li>3. Click the right arrow to stage the NFTs in your vault.</li>
+        <li>4. Click "Move NFTs" and sign the transaction to lock them up in the vault.</li>
+        <li>5. When you're ready, click "Begin Staking" and sign the final transaction.</li>
+        <li>6. Watch those $DUST gainz roll in bruh.</li>
+      </ol>
+      You can collect $DUST at any time by clicking the "Collect X $DUST" button.
+    </p>
+    <p>
+      Unstaking is also a trip (turn up your volume for a surprise):
+      <ol>
+        <li>1. Click "End Staking" and sign the first txn.</li>
+        <li>2. Your staking account is now in a "cooldown" state. There's no cooldown period though, so just click "End Cooldown" and sign txn #2.</li>
+        <li>3. You may now move your NFTs back into your wallet by selecting them and clicking the left arrow.</li>
+        <li>4. Finally, click the "Move NFTs" button to sign the final txn, putting them back in your wallet.</li>
       </ol>
     </p>
   </div>
