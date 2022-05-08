@@ -24,7 +24,6 @@ export default defineComponent({
     const menu = [
       { name: 'Home', url: '/' },
       { name: 'Staking', url: '/farmer' },
-      { name: 'Website', url: 'http://www.mickeydegods.com/'}
     ];
 
     return {
