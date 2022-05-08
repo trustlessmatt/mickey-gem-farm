@@ -1,13 +1,7 @@
 <template>
   <div class="ml-20 mr-20 border-2 border-red-900 bg-gray-50 shadow-xl rounded-xl p-8">
-    <p class="text-3xl font-bold">Your Staking Account</p>
-    <div class="mb-2">
-      state:
-      <p class="inline-block bg-yellow-200">
-        {{ parseFarmerState(farmerAcc) }}
-      </p>
-    </div>
-    <div class="mb-2">Your identity: {{ farmerAcc.identity.toBase58() }}</div>
+    <p class="text-3xl font-bold">Your Staking Account is: {{ parseFarmerState(farmerAcc) }}</p>
+    <div class="mb-2 w300:block hidden">Your identity: {{ farmerAcc.identity.toBase58() }}</div>
     <div class="mb-2">Associated vault: {{ farmerAcc.vault.toBase58() }}</div>
     <div class="mb-2">Items staked: {{ farmerAcc.gemsStaked }}</div>
     <!-- <div class="mb-2">

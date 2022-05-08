@@ -4,7 +4,7 @@
     <div class="mb-2">Accrued: {{ reward.accruedReward / 1000000000 }}</div>
     <div class="mb-2">Total paid out: {{ reward.paidOutReward / 1000000000 }}</div>
     <div>
-      <div class="mb-2">
+      <!-- <div class="mb-2">
         Last recorded accrued reward per meal:
         {{
           numeral(
@@ -12,7 +12,7 @@
               10 ** 12
           ).format('0,0.0')
         }} $DUST (this is variable and changes often based on # of stakers)
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
