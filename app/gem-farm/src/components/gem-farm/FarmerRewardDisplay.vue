@@ -4,15 +4,13 @@
     <div class="mb-2">Accrued: {{ reward.accruedReward / 1000000000 }}</div>
     <div class="mb-2">Total paid out: {{ reward.paidOutReward / 1000000000 }}</div>
     <div>
-      <!-- <div class="mb-2">
-        Last recorded accrued reward per meal:
-        {{
-          numeral(
-            reward.variableRate.lastRecordedAccruedRewardPerRarityPoint.n /
-              10 ** 12
-          ).format('0,0.0')
-        }} $DUST (this is variable and changes often based on # of stakers)
-      </div> -->
+      <!-- fixed daily dust funding = 264/day so reward varies per number of staked items -->
+      <div class="mb-2">
+        Estimated Reward Rate (Variable):
+        {{ 
+          (264 / parseNumGems(gems))
+        }} $DUST/day
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +26,9 @@ export default defineComponent({
   props: {
     reward: Object,
     farmReward: Object,
+    gems: Object,
     title: String,
+    farmAcc: Object,
   },
   setup() {
     const parseRewardType = (reward: any): string => {
@@ -36,8 +36,14 @@ export default defineComponent({
       return Object.keys(reward.rewardType)[0];
     };
 
+    const parseNumGems = (items: any): number => {
+      // returns number of gems
+      return items;
+    }
+
     return {
       parseRewardType,
+      parseNumGems,
       parseDate,
       numeral,
     };
