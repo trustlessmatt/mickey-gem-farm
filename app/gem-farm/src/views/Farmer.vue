@@ -10,7 +10,7 @@
           <div v-if="farmAcc" class="text-6xl farm-value">
             {{ farmAcc?.gemsStaked }}
           </div>
-          <div v-else class="text-6xl farm-value">{{ 0 }}</div>
+          <div v-else class="text-6xl farm-value">{{ 69 }}</div>
         </div>
         <div
           class="flex flex-col w-full sm:w-96 text-center p-3 sm:p-1 justify-center"
@@ -22,7 +22,7 @@
               10
             }}%
           </div>
-          <div v-else class="text-6xl farm-value">{{ 0 }}%</div>
+          <div v-else class="text-6xl farm-value">{{ 69 }}%</div>
         </div>
       </div>
       <ConfigPane />
@@ -158,9 +158,9 @@ export default defineComponent({
       availableA.value = farmerAcc.value.rewardA.accruedReward
         .sub(farmerAcc.value.rewardA.paidOutReward)
         .toString();
-      availableB.value = farmerAcc.value.rewardB.accruedReward
-        .sub(farmerAcc.value.rewardB.paidOutReward)
-        .toString();
+      // availableB.value = farmerAcc.value.rewardB.accruedReward
+      //   .sub(farmerAcc.value.rewardB.paidOutReward)
+      //   .toString();
     };
 
     const fetchInitFarm = async () => {
@@ -225,6 +225,7 @@ export default defineComponent({
         await fetchFarmer();
       } catch (err) {
         console.log(err);
+        alert(err)
       } finally {
         isLoading.value = false;
       }
@@ -232,15 +233,19 @@ export default defineComponent({
 
     // --------------------------------------- staking
     const beginStaking = async () => {
+      isLoading.value = true;
       await gf.stakeWallet(new PublicKey(farm.value!));
       await fetchFarmer();
       selectedNFTs.value = [];
+      isLoading.value = false;
     };
 
     const endStaking = async () => {
+      isLoading.value = true;
       await gf.unstakeWallet(new PublicKey(farm.value!));
       await fetchFarmer();
       selectedNFTs.value = [];
+      isLoading.value = false;
     };
 
     const claim = async () => {
@@ -276,6 +281,7 @@ export default defineComponent({
       gemSource: PublicKey,
       creator: PublicKey
     ) => {
+      isLoading.value = true;
       await gf.flashDepositWallet(
         new PublicKey(farm.value!),
         '1',
@@ -284,9 +290,11 @@ export default defineComponent({
         creator
       );
       await fetchFarmer();
+      isLoading.value = false;
     };
 
     const addGems = async () => {
+      isLoading.value = true;
       await Promise.all(
         selectedNFTs.value.map((nft) => {
           const creator = new PublicKey(
@@ -301,6 +309,7 @@ export default defineComponent({
       console.log(
         `added another ${selectedNFTs.value.length} gems into staking vault`
       );
+      isLoading.value = false;
     };
 
     return {

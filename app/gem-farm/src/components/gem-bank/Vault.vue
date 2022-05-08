@@ -1,4 +1,5 @@
 <template>
+  <loading :active="isLoading" :is-full-page="fullPage" :loader="loader" />
   <!--control buttons-->
   <div class="mb-10 flex justify-center ">
     <button
@@ -70,9 +71,11 @@ import { initGemBank } from '@/common/gem-bank';
 import { PublicKey } from '@solana/web3.js';
 import { getListDiffBasedOnMints, removeManyFromList } from '@/common/util';
 import { BN } from '@project-serum/anchor';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default defineComponent({
-  components: { ArrowButton, NFTGrid },
+  components: { ArrowButton, NFTGrid, Loading },
   props: {
     vault: String,
   },
@@ -95,6 +98,9 @@ export default defineComponent({
     //moved over onchain
     const toWalletNFTs = ref<INFT[]>([]);
     const toVaultNFTs = ref<INFT[]>([]);
+
+    //current walet/vault state
+    const isLoading = ref<boolean>(false);
 
     // --------------------------------------- populate initial nfts
 
@@ -165,6 +171,7 @@ export default defineComponent({
     // --------------------------------------- moving nfts
 
     const handleWalletSelected = (e: any) => {
+      isLoading.value = true;
       if (e.selected) {
         selectedWalletNFTs.value.push(e.nft);
       } else {
@@ -172,18 +179,22 @@ export default defineComponent({
         selectedWalletNFTs.value.splice(index, 1);
       }
       ctx.emit('selected-wallet-nft', selectedWalletNFTs.value);
+      isLoading.value = false;
     };
 
     const handleVaultSelected = (e: any) => {
+      isLoading.value = true;
       if (e.selected) {
         selectedVaultNFTs.value.push(e.nft);
       } else {
         const index = selectedVaultNFTs.value.indexOf(e.nft);
         selectedVaultNFTs.value.splice(index, 1);
       }
+      isLoading.value = false;
     };
 
     const moveNFTsFE = (moveLeft: boolean) => {
+      isLoading.value = true;
       if (moveLeft) {
         //push selected vault nfts into desired wallet
         desiredWalletNFTs.value.push(...selectedVaultNFTs.value);
@@ -199,23 +210,32 @@ export default defineComponent({
         //empty selected walelt
         selectedWalletNFTs.value = [];
       }
+      isLoading.value = false;
     };
 
     //todo jam into single tx
     const moveNFTsOnChain = async () => {
-      for (const nft of toVaultNFTs.value) {
-        console.log(nft);
-        const creator = new PublicKey(
-          //todo currently simply taking the 1st creator
-          (nft.onchainMetadata as any).data.creators[0].address
-        );
-        console.log('creator is', creator.toBase58());
-        await depositGem(nft.mint, creator, nft.pubkey!);
+      isLoading.value = true;
+      try {
+        for (const nft of toVaultNFTs.value) {
+          console.log(nft);
+          const creator = new PublicKey(
+            //todo currently simply taking the 1st creator
+            (nft.onchainMetadata as any).data.creators[0].address
+          );
+          console.log('creator is', creator.toBase58());
+          await depositGem(nft.mint, creator, nft.pubkey!);
+        }
+        for (const nft of toWalletNFTs.value) {
+          await withdrawGem(nft.mint);
+        }
+        await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);  
+        isLoading.value = false;
+      } catch(e) {
+        isLoading.value = false;
+        alert("Stupid Solana... Transaction not confirmed in 30sec. Try again!")
+        console.log("Error code:", e);
       }
-      for (const nft of toWalletNFTs.value) {
-        await withdrawGem(nft.mint);
-      }
-      await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
     };
 
     //to vault = vault desired - vault current
@@ -258,6 +278,7 @@ export default defineComponent({
       creator: PublicKey,
       source: PublicKey
     ) => {
+      isLoading.value = true;
       const { txSig } = await gb.depositGemWallet(
         bank.value,
         vault.value,
@@ -267,9 +288,11 @@ export default defineComponent({
         creator
       );
       console.log('deposit done', txSig);
+      isLoading.value = false;
     };
 
     const withdrawGem = async (mint: PublicKey) => {
+      isLoading.value = true;
       const { txSig } = await gb.withdrawGemWallet(
         bank.value,
         vault.value,
@@ -277,6 +300,7 @@ export default defineComponent({
         mint
       );
       console.log('withdrawal done', txSig);
+      isLoading.value = false;
     };
 
     // --------------------------------------- return
@@ -295,6 +319,10 @@ export default defineComponent({
       // eslint-disable-next-line vue/no-dupe-keys
       vault,
       vaultLocked,
+      isLoading,
+      fullPage: true,
+      loader: 'bars',
+
     };
   },
 });
