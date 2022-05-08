@@ -1,7 +1,7 @@
 <template>
   <div class="relative h-full min-h-screen bg-rb-mickeypink">
     <TheNavBar />
-    <div class="px-12 mt-2 mx-auto max-w-2xl">
+    <div class="px-16 mt-2 mx-auto max-w-2xl">
       <img src="/mickey_degod_banner.png" alt="mickey banner" />
     </div>
 
@@ -17,7 +17,7 @@
       <img
         src="/FriesPuddle.png"
         alt="Fries"
-        className="w-20 fixed bottom-0 right-10"
+        className="w-20 fixed bottom-1 right-10"
       />
     </div>
   </div>

@@ -1,21 +1,20 @@
 <template>
   <div class="mb-10">
-    <p class="text-xl font-bold">Welcome to Mickey Degods - We're Burnin It 🍟</p>
-    <p class="mt-5">
+    <p class="text-2xl font-bold">Welcome to Mickey Degods - We're Burnin It 🍟</p>
+    <p class="pt-5">
       Staking your Combos is a fickle process. Here's a quick overview:
-      <ol>
+      <ol class="pt-5">
         <li>1. Head to our Staking Area and connect your wallet.</li>
-        <li>2. Select your Mickey's Combo, Day 1 Fry, or Mythic Fries on the left. You may select multiple and move them over at together.</li>
+        <li>2. Select your Mickey's Combo, Day 1 Fry, or Mythic Fries on the left. You may select multiple and move them all over together.</li>
         <li>3. Click the right arrow to stage the NFTs in your vault.</li>
         <li>4. Click "Move NFTs" and sign the transaction to lock them up in the vault.</li>
         <li>5. When you're ready, click "Begin Staking" and sign the final transaction.</li>
-        <li>6. Watch those $DUST gainz roll in bruh.</li>
+        <li>6. Watch those $DUST gainz roll in bruh. You can collect $DUST at any time by clicking the "Collect X $DUST" button.</li>
       </ol>
-      You can collect $DUST at any time by clicking the "Collect X $DUST" button.
     </p>
     <p>
       Unstaking is also a trip (turn up your volume for a surprise):
-      <ol>
+      <ol class="pt-5">
         <li>1. Click "End Staking" and sign the first txn.</li>
         <li>2. Your staking account is now in a "cooldown" state. There's no cooldown period though, so just click "End Cooldown" and sign txn #2.</li>
         <li>3. You may now move your NFTs back into your wallet by selecting them and clicking the left arrow.</li>
@@ -24,7 +23,7 @@
     </p>
   </div>
   <div class="mx-auto">
-    <div class="">
+    <div>
       <!-- <img src='/drink_puddle.png' alt='drink' width='300' /> -->
       <router-link to="farmer">
         <button class="bg-rb-mickeyred text-white rounded-lg py-2 px-3 mx-2">Get Staking</button>

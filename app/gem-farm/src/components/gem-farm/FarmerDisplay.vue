@@ -19,10 +19,11 @@
 
     <div class="flex mb-5">
       <div class="flex-1 mr-5">
-        <FarmerRewardDisplay
-          :key="farmerAcc.rewardA"
-          :farmReward="farmAcc.rewardA"
-          :reward="farmerAcc.rewardA"
+      <FarmerRewardDisplay
+        :key="farmerAcc?.rewardA"
+        :farmReward="farmAcc?.rewardA"
+        :reward="farmerAcc?.rewardA"
+	:gems="farmerAcc?.gemsStaked"
           title="$DUST Rewards"
         />
       </div>

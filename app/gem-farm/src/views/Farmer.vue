@@ -152,7 +152,9 @@ export default defineComponent({
     //needed in case we switch in from another window
     onMounted(async () => {
       await freshStart();
+      await updateAvailableRewards();
     });
+    
 
     const updateAvailableRewards = async () => {
       availableA.value = farmerAcc.value.rewardA.accruedReward
@@ -195,6 +197,15 @@ export default defineComponent({
     };
 
     const freshStart = async () => {
+      try {
+        isLoading.value = true;
+        initGf = await initGemFarm(getConnection());
+        await fetchInitFarm();
+        isLoading.value = false;
+      } catch (e) {
+        console.log(`farm with PK ${farm.value} not found :(`);
+        isLoading.value = false;
+      }
       if (getWallet() && getConnection()) {
         isLoading.value = true;
         gf = await initGemFarm(getConnection(), getWallet()!);
@@ -333,6 +344,8 @@ export default defineComponent({
       selectedNFTs,
       handleNewSelectedNFT,
       addGems,
+      fetchFarn,
+      fetchFarmer,
     };
   },
 });
