@@ -17,7 +17,7 @@
         :key="farmerAcc?.rewardA"
         :farmReward="farmAcc?.rewardA"
         :reward="farmerAcc?.rewardA"
-	:gems="farmerAcc?.gemsStaked"
+	      :gems="farmerAcc?.gemsStaked"
           title="$DUST Rewards"
         />
       </div>
