@@ -8,7 +8,7 @@
       <div class="mb-2">
         Estimated Reward Rate (Variable):
         {{ 
-          (264 / parseNumGems(gems))
+          (264 / parseNumGems(allGems)) * parseNumGems(yourGems)
         }} $DUST/day
       </div>
     </div>
@@ -26,7 +26,8 @@ export default defineComponent({
   props: {
     reward: Object,
     farmReward: Object,
-    gems: Object,
+    allGems: Object,
+    yourGems: Object,
     title: String,
     farmAcc: Object,
   },
