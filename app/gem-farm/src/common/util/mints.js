@@ -1,3 +1,5 @@
+// bottom address is a candy machine ID 
+
 export const mints = [
   "4UAk1DZmHH7YoSKwo5c1s74kVSe9E9xG6dJ53ng9Vc3D",
   "CLmrgtvwzPDeiLF5XKSCiDH2RdAajHLfdAejAUbnhh9m",
@@ -207,5 +209,6 @@ export const mints = [
   "5NttqKa3oGF2E2tCBuk38NZLjJoF9QsBw8MiFaX7Bz1S",
   "EkxcGoJaLUq52BREtpx6QJSwgCnfPk1LfhUY1Gf9o64N",
   "7e3LpgqY32yRLnP4fPZMzhiLNZv1EY1hgySDWUMjRxwJ",
-  "31bTm7taDaihozsqAQ56ZSQdPdbkbPiuWdcgFHHWTpsU"
+  "31bTm7taDaihozsqAQ56ZSQdPdbkbPiuWdcgFHHWTpsU",
+  "E5UE83p8hisph8GPmmzZNUdAv7Vdg5yDGhFZjkgtVrwm"
 ]
