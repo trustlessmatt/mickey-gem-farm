@@ -233,7 +233,7 @@ export default defineComponent({
         isLoading.value = false;
       } catch(e) {
         isLoading.value = false;
-        alert("Stupid Solana... Transaction not confirmed in 30sec. Try again!")
+        alert("Either the transaction timed out, or you have to select Add Gems and reset staking. Try again!")
         console.log("Error code:", e);
       }
     };
