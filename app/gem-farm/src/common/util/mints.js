@@ -223,5 +223,14 @@ export const mints = [
   "3fxc5K7JhaF1RBpnGc2cfuydcr3eQyvWzLqUX68UTbr5",
   "HqBE2CC5XEFFWeoFa2bz29jVThSiZCVc2CyhGgZF9key",
   "BJ4BsUJ3rb9wJMVuZkKwJ5gWWTym72w1poYJ5tkreX5P",
-  "4TJSu1CXaN1NPsfg45SLh5kd5xPkrQ8CDcJQ8LUp29xM"
+  "4TJSu1CXaN1NPsfg45SLh5kd5xPkrQ8CDcJQ8LUp29xM",
+  "BJ4BsUJ3rb9wJMVuZkKwJ5gWWTym72w1poYJ5tkreX5P",
+  "9zTQJYLjv16jyDnQMhfaFc1vSuegjsrgbpkZcm8UrypM",
+  "HhdfVuCwj7MNRfsrnhgtH8pn3XmznQA2qEKuvNTu2nLG",
+  "94Mnc53TAPMuEYj4guqiN9WYxP1A6mpbpWgSHvaACQqL",
+  "DrrAAHCNyyrQuuuuuXu8oZcvtaPaFbQMs2vc2jPeq91t",
+  "7Unv9XXBC82krYacoAniXfM86GnuuH1sX6vhy8fQ8JFG",
+  "HknVR5iQ6t42AtRbiazB65B2eed2QamNEsfMCBKELEVB",
+  "8dAYHQTFk4PWRXXxgS5zJ7d7bxh1woKXZ2jt9Ssuar8x",
+  
 ]
