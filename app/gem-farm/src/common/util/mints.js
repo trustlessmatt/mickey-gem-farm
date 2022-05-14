@@ -257,5 +257,6 @@ export const mints = [
   "39ZkFfbEiszTkpVpZJhyRKc1bGw1G39zhAMQqSk3sLBD",
   "EMTshsoeDHMFzvgNz3kCu9q4VpxgiTb8fWSDGcNuwBgF",
   "Ai98AZCLK8m9uMTJE8p4buVYnf6twmnfqGW9FBtycC2Q",
-  "55cn8YzMyx3uLQMBdTPxmv13fKpwnrcVTwJSvSanLpm6"
+  "55cn8YzMyx3uLQMBdTPxmv13fKpwnrcVTwJSvSanLpm6",
+  "7WEgyCJ5PCwA6E913RoqFcbGgEY7VjUcpY6vb2o1zWzx"
 ]
