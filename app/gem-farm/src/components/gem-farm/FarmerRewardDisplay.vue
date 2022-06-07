@@ -7,10 +7,12 @@
       <!-- fixed daily dust funding = 264/day so reward varies per number of staked items -->
       <div class="mb-2">
         Estimated Reward Rate (Variable):
+        <span class="font-bold">
         {{ 
           // divide by two for the first halving
           Math.floor(((264/2) / parseNumGems(allGems)) * parseNumGems(yourGems) * 10) / 10
         }} $DUST/day
+        </span>
       </div>
     </div>
   </div>
