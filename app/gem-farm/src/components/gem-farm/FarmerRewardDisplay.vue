@@ -8,7 +8,8 @@
       <div class="mb-2">
         Estimated Reward Rate (Variable):
         {{ 
-          (264 / parseNumGems(allGems)) * parseNumGems(yourGems)
+          // divide by two for the first halving
+          ((264 / parseNumGems(allGems)) * parseNumGems(yourGems) / 2)
         }} $DUST/day
       </div>
     </div>
