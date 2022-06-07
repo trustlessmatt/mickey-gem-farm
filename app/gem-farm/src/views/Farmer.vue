@@ -18,7 +18,7 @@
           <div class="text-base">% of Meals Not Thrown Out (Staked)</div>
           <div v-if="farmAcc" class="text-6xl farm-value">
             {{
-              Math.floor((parseInt(farmAcc?.gemsStaked) / 270.0) * 100 * 10) /
+              Math.floor((parseInt(farmAcc?.gemsStaked) / 273.0) * 100 * 10) /
               10
             }}%
           </div>
