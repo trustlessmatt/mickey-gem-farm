@@ -9,7 +9,7 @@
         Estimated Reward Rate (Variable):
         {{ 
           // divide by two for the first halving
-          ((264 / parseNumGems(allGems)) * parseNumGems(yourGems) / 2)
+          Math.floor(((264/2) / parseNumGems(allGems)) * parseNumGems(yourGems) * 10) / 10
         }} $DUST/day
       </div>
     </div>
