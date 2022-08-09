@@ -9,8 +9,8 @@
         Estimated Reward Rate (Variable):
         <span class="font-bold">
         {{ 
-          // divide by two for the first halving
-          Math.floor(((264/2) / parseNumGems(allGems)) * parseNumGems(yourGems) * 10) / 10
+          // divide by two for the first halving / divide by 2 again for second halving
+          Math.floor(((264/4) / parseNumGems(allGems)) * parseNumGems(yourGems) * 10) / 10
         }} $DUST/day
         </span>
       </div>
