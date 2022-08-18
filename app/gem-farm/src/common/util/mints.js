@@ -1,5 +1,3 @@
-// bottom address is a candy machine ID 
-
 export const mints = [
   "4UAk1DZmHH7YoSKwo5c1s74kVSe9E9xG6dJ53ng9Vc3D",
   "CLmrgtvwzPDeiLF5XKSCiDH2RdAajHLfdAejAUbnhh9m",
@@ -274,5 +272,18 @@ export const mints = [
   "7cc2F4buR5r39xpbZ4gRdbmiJ6eLrBWXzvo2za42o6MK",
   "3mFEA4t3ngP6h1B2DmoiGLbwAt3Z43hhVw5E11kDi2eV",
   "6xsARcjSmFG7qLBr2QASpa1kDmmW9WsHMqUmhNWUYaca",
-  "C3EvVGnutRmv4X2x1tps3fMVQjrzstWFw8Pc7T18SYAc"
+  "C3EvVGnutRmv4X2x1tps3fMVQjrzstWFw8Pc7T18SYAc",
+  "13MTTDZ8VYfetSbB63hPAs5JpWv4dvbg8sD2ZK1ghFty",
+  "FNRrMQJiH8TJAyUXz7rvdwcneAe6qmX8Hx3BzDcx9iwA",
+  "4gVvpM4CQNkFuwmMqw1mR5R9sv5vnnky6sWme5Kyf3xo",
+  "E45AGEUUDwwBTfihfFjN9KnJokLf1xktjhaeZ5dK8Jfk",
+  "J9u5hVHkdvGvaFfpKvuqJJEFcHahf2fHvzUjFvznYqMH",
+  "3vJ3pU2zyou5PycVPdtJsRsitSis9eE7mU4ADVbRPRcN",
+  "CGfpsuse8G3Y5e1Di6PazM68dbMVd1GvPWddwbuHGSJq",
+  "J2FHb9ph7fnAZREDK2YFiRQ1gURovEzoTKYoSUVtD2Ut",
+  "5f7YWf7EBMHMzGQ9j3subGtWKiLvzmkq8kXNDVwJtGxi",
+  "AVw6XAoDrdBGonAcbprfk5rHkokGPxZEjGuvTZAxasVB",
+  "B1Xtq3u52a7qFzyikmxRMnyFTuBkVHYQpx3iTnvAYkK7",
+  "B8ZxnB8WcMq53DRxB8AbbCjhfSp2EkErTsh6n4UfFDah",
+  "8YPVrgTzujg8YrSrCRSeMBN8gHsKeZ9t117Wvc5bEz7W"
 ]
