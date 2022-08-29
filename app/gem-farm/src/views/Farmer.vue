@@ -16,10 +16,10 @@
           class="flex flex-col w-full sm:w-96 text-center p-3 sm:p-1 justify-center"
         >
           <div class="text-base">% of Meals Not Thrown Out (Staked)</div>
-          <!-- 275 OG stakeable items + 13 special fries -->
+          <!-- 277 OG stakeable items + 13 special fries -->
           <div v-if="farmAcc" class="text-6xl farm-value">
             {{
-              Math.floor((parseInt(farmAcc?.gemsStaked) / (275 + 13)) * 100 * 10) /
+              Math.floor((parseInt(farmAcc?.gemsStaked) / (277 + 13)) * 100 * 10) /
               10
             }}%
           </div>
